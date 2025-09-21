@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toko Komputer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #e4e4ff; /* ungu muda pastel */
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(90deg, #1A2A80, #3B3B8A); /* gradasi biru tua ke ungu */
+      color: white;
+      padding: 15px 30px;
+      text-align: left; /* teks di kiri */
+      font-weight: bold;
+      font-size: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    header p {
+      margin: 5px 0 0 0;
+      font-size: 13px;
+      font-weight: normal;
+      color: #ddd;
+    }
+    main {
+      display: flex;
+      padding: 20px;
+      gap: 20px;
+    }
+    .form-container {
+      flex: 1;
+      background: #ffffff;
+      color: rgb(0, 0, 0);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .form-container h2 {
+      margin-bottom: 15px;
+      border-bottom: 2px solid #41418f;
+      padding-bottom: 5px;
+    }
+    .form-container table {
+      width: 100%;
+    }
+    .form-container td {
+      padding: 5px;
+      font-size: 14px;
+    }
+    .form-container input {
+      width: 95%;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: none;
+      outline: none;
+    }
+    .form-container button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 48%;
+      background-color: #1A2A80;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .form-container button:hover {
+      background-color: #6060A8;
+    }
+    .table-container {
+      flex: 2;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .table-container h2 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #6060A8;
+      padding-bottom: 5px;
+    }
+    select {
+      padding: 6px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #1A2A80;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    tr:hover {
+      background-color: #E2E2F9;
+    }
+    td button {
+      background: red;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    td button:hover {
+      background: darkred;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    💻 Toko Komputer Online
+    <p>Manajemen Produk dan Pesanan</p>
+  </header>
+
+  <main>
+    <!-- Form Tambah Produk -->
+    <div class="form-container">
+      <h2>Tambah Produk</h2>
+      <table>
+        <tr>
+          <td>Nama</td>
+          <td><input type="text" id="nama"></td>
+        </tr>
+        <tr>
+          <td>Harga</td>
+          <td><input type="number" id="harga"></td>
+        </tr>
+        <tr>
+          <td>Stok</td>
+          <td><input type="number" id="stok"></td>
+        </tr>
+      </table>
+      <div style="display:flex; gap:4%;">
+        <button onclick="tambahProduk()">Tambah</button>
+        <button onclick="resetForm()">Reset</button>
+      </div>
+    </div>
+
+    <!-- Tabel Produk -->
+    <div class="table-container">
+      <h2>
+        Daftar Produk
+        <span>
+          Sortir: 
+          <select id="sortSelect" onchange="sortProduk()">
+            <option value="nama">Nama</option>
+            <option value="harga">Harga</option>
+            <option value="stok">Stok</option>
+          </select>
+        </span>
+      </h2>
+      <table id="produkTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nama</th>
+            <th>Harga</th>
+            <th>Stok</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    let produkToko = [
+      {id: 1, nama: "Laptop Gaming RTX 4060", harga: 14500000, stok: 6},
+      {id: 2, nama: "SSD NVMe 1TB", harga: 1200000, stok: 18},
+      {id: 3, nama: "Mouse Wireless", harga: 250000, stok: 35},
+      {id: 4, nama: "Keyboard Mechanical", harga: 850000, stok: 8},
+      {id: 5, nama: "Monitor 24'' 144Hz", harga: 2200000, stok: 4}
+    ];
+    let nextId = 6;
+
+    function tampilkanProduk() {
+      const tbody = document.querySelector("#produkTable tbody");
+      tbody.innerHTML = "";
+      produkToko.forEach(p => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${p.id}</td>
+            <td>${p.nama}</td>
+            <td>Rp ${p.harga.toLocaleString()}</td>
+            <td>${p.stok}</td>
+            <td><button onclick="hapusProduk(${p.id})">Hapus</button></td>
+          </tr>
+        `;
+      });
+    }
+
+    function tambahProduk() {
+      const nama = document.getElementById("nama").value;
+      const harga = parseInt(document.getElementById("harga").value);
+      const stok = parseInt(document.getElementById("stok").value);
+
+      if (nama && harga && stok) {
+        produkToko.push({id: nextId++, nama, harga, stok});
+        tampilkanProduk();
+        resetForm();
+      } else {
+        alert("Semua field harus diisi!");
+      }
+    }
+
+    function hapusProduk(id) {
+      produkToko = produkToko.filter(p => p.id !== id);
+      tampilkanProduk();
+    }
+
+    function sortProduk() {
+      const sortBy = document.getElementById("sortSelect").value;
+      produkToko.sort((a, b) => a[sortBy] > b[sortBy] ? 1 : -1);
+      tampilkanProduk();
+    }
+
+    function resetForm() {
+      document.getElementById("nama").value = "";
+      document.getElementById("harga").value = "";
+      document.getElementById("stok").value = "";
+    }
+
+    // Load awal
+    tampilkanProduk();
+  </script>
+
+</body>
+</html>
